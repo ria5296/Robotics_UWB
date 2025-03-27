@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>메인 페이지</title>
+</head>
+<body>
+
+{% if username %}
+    <h2>안녕하세요, {{ username }}님!</h2>
+
+    <a href="/camera"><button>🗺 위치 확인</button></a>
+    <a href="/scan"><button>📷 QR 코드 인식하기</button></a>
+    <a href="/stream"><button>📺 영상 스트리밍</button></a>
+
+    <br><br>
+    <a href="/logout">로그아웃</a>
+{% else %}
+    <p><a href="/login">로그인</a> | <a href="/register">회원가입</a></p>
+{% endif %}
+
+</body>
+</html>

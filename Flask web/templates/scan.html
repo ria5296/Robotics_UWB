@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR 코드 인식기</title>
+    <style>
+        video {
+            width: 100%;
+            max-width: 600px;
+        }
+        #output {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>QR 코드 인식기</h2>
+    <video id="video" autoplay></video>
+    <div id="output">QR 코드 결과: 없음</div>
+
+    <!-- jsQR -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+
+    <script>
+        const video = document.getElementById('video');
+        const output = document.getElementById('output');
+
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(stream => {
+                video.srcObject = stream;
+                video.setAttribute("playsinline", true);
+                video.play();
+                requestAnimationFrame(tick);
+            })
+            .catch(err => {
+                output.textContent = "카메라 접근 불가: " + err;
+            });
+
+        function tick() {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+            if (code) {
+                output.textContent = "QR 코드 결과: " + code.data;
+            }
+
+            requestAnimationFrame(tick);
+        }
+    </script>
+</body>
+</html>
