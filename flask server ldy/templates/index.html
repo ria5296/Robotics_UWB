@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카카오맵 GPS</title>
+    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=da15e3fc187e76de59835c4581d0b679&libraries=services,clusterer"></script> 
+    <!-- Font Awesome 아이콘 사용을 위한 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* 페이지 전체 스타일 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 지도 크기 설정 */
+        #map {
+            width: 100%;
+            height: 100vh; /* 화면 전체 높이로 설정 */
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* 원형 버튼 공통 스타일 */
+        .circle-button {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            color: #663bab;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 메뉴 버튼 (왼쪽 상단) */
+        .menu-button {
+            top: 10px;
+            left: 10px;
+        }
+
+        /* 마이페이지 버튼 (오른쪽 상단) */
+        .mypage-button {
+            top: 10px;
+            right: 10px;
+        }
+
+        /* GPS 버튼 (우측 하단) */
+        .gps-button {
+            bottom: 100px;
+            right: 25px;
+        }
+
+        /* 마이페이지 사이드바 */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -78%;  /* 화면 밖으로 완전히 숨기기 */
+            width: 78%;
+            height: 100%;
+            background-color: white;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+            transition: right 0.3s ease-in-out;
+            padding: 20px;
+            z-index: 1000;
+            overflow-x: hidden; /* 가로 스크롤 방지 */
+        }
+
+        .sidebar.show {
+            right: 0;  /* 오른쪽으로 슬라이드 */
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 35px;
+            right: 30px;
+            width: 35px;
+            height: 35px;
+            background-color: transparent;
+            color: rgb(172, 168, 175);
+            font-size: 28px;  /* X 크기 */
+            border: none;
+            cursor: pointer;
+            z-index: 6;
+            text-align: center;
+            line-height: 35px; /* X가 버튼 중앙에 오도록 설정 */
+            border-radius: 50%; /* 원형 버튼 */
+        }
+
+        #username {
+            margin-top: 60px; /* 위쪽 여백 30px */
+        }
+
+        /* 로그아웃 버튼 */
+        .logout-button {
+            margin-top: 20px; /* 위쪽 여백 30px */
+            padding: 10px 20px;
+            background-color: #663bab;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* 스캔하기 버튼 */
+        .scan-button {
+            position: absolute;
+            bottom: 25px; 
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            width: 200px;
+            background-color: #663bab;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            z-index: 1;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center; 
+            gap: 10px;
+            justify-content: center;
+        }
+
+        /* QR 아이콘 */
+        .scan-button i {
+            font-size: 18px;
+        }
+
+        /* GPS 버튼 */
+        .gps-button {
+            position: absolute;
+            bottom: 100px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            color: #663bab;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 1;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* GPS 화살표 아이콘 */
+        .gps-button i {
+            margin-top: 5px;
+        }
+
+        /* 마이페이지 버튼 (동그란 배경, 오른쪽 상단) */
+        .mypage-button {
+            position: absolute;
+            top: 40px;
+            right: 20px;
+            width: 50px;  
+            height: 50px;
+            border-radius: 50%; 
+            background-color: #ffffff; 
+            color: #b8b8b8;
+            font-size: 22px;
+            border: none;
+            cursor: pointer;
+            z-index: 2; 
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 메뉴 버튼 (동그란 배경, 왼쪽 상단) */
+        .menu-button {
+            position: absolute;
+            top: 40px;
+            left: 20px;
+            width: 50px;  
+            height: 50px;
+            border-radius: 50%; 
+            background-color: #ffffff;
+            color: #b8b8b8;
+            font-size: 22px;
+            border: none;
+            cursor: pointer;
+            z-index: 2; 
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 지도 영역 -->
+    <div id="map"></div>
+
+    <!-- 마이페이지 버튼 -->
+    <button class="mypage-button" onclick="onMypageClick()">
+        <i class="fas fa-user"></i>
+    </button>
+
+    <!-- 사이드바 -->
+    <div id="sidebar" class="sidebar">
+        <div id="username">로그인되지 않았습니다.</div>
+        <button class="logout-button" onclick="logout()">로그아웃</button>
+        <button class="close-btn" onclick="toggleSidebar()">X</button>
+    </div>
+
+    <!-- QR 스캔하기 버튼 -->
+    <button class="scan-button" onclick="window.location.href='/scan'">
+        <i class="fas fa-camera"></i> QR 스캔하기
+    </button>
+
+    <!-- GPS 버튼 -->
+    <button class="gps-button" onclick="centerMapToCurrentLocation()">
+        <i class="fas fa-location-arrow"></i>
+    </button>
+
+    <!-- 메뉴 버튼 -->
+    <button class="menu-button" onclick="onMenuClick()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <script>
+        var map;
+        var currentMarker;
+
+        // 지도 생성
+        function initMap() {
+            var mapContainer = document.getElementById('map');
+            var mapOption = {
+                center: new kakao.maps.LatLng(37.5665, 126.9780),
+                level: 3
+            };
+            map = new kakao.maps.Map(mapContainer, mapOption);
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('show');
+        }
+
+        function logout() {
+            fetch('/logout')
+                .then(response => window.location.reload()); // 로그아웃 후 새로고침
+        }
+
+        window.onload = function () {
+            fetch('/get_user')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('서버에서 오류가 발생했습니다.');
+                    }
+                    return response.json();  // JSON 응답으로 변환
+                })
+                .then(data => {
+                    if (data.logged_in) {
+                        // 로그인된 경우
+                        document.getElementById("sidebar").classList.remove("show");
+                        document.getElementById("username").innerText = data.username + "님 환영합니다!";
+                    } else {
+                        // 로그인되지 않은 경우
+                        window.location.href = '/login';  // 로그인 페이지로 리디렉션
+                    }
+                })
+                .catch(error => {
+                    console.error('로그인 상태 확인 실패:', error);
+                    window.location.href = '/login';  // 오류 발생 시 로그인 페이지로 리디렉션
+                });
+        };
+
+
+        // GPS 위치로 지도 이동
+        function centerMapToCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    var locPosition = new kakao.maps.LatLng(lat, lng);
+
+                    map.setCenter(locPosition);  // 지도 중심을 현재 위치로 변경
+
+                    // 현재 위치에 마커 추가
+                    if (currentMarker) {
+                        currentMarker.setMap(null); // 기존 마커 제거
+                    }
+                    currentMarker = new kakao.maps.Marker({
+                        map: map,
+                        position: locPosition
+                    });
+                }, function(error) {
+                    alert('GPS 정보를 가져올 수 없습니다.');
+                });
+            } else {
+                alert('이 브라우저는 GPS를 지원하지 않습니다.');
+            }
+        }
+
+        // 스캔하기 버튼 클릭 시 동작
+        function onScanClick() {
+            console.log("스캔하기 버튼이 클릭되었습니다!");
+        }
+
+        // 마이페이지 버튼 클릭 시 동작
+        // 로그인 상태 확인 후, 마이페이지 버튼 클릭 처리
+        function onMypageClick() {
+            fetch('/get_user')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.logged_in) {
+                        // 로그인 상태라면, 마이페이지 표시
+                        toggleSidebar();
+                        document.getElementById("username").innerText = data.username + "님 환영합니다!";
+                    } else {
+                        // 로그인 안 되어 있으면, 로그인 페이지로 리디렉션
+                        window.location.href = "/login";
+                    }
+                })
+                .catch(error => console.error('Error fetching user data:', error));
+        }
+
+        // 메뉴 버튼 클릭 시 동작
+        function onMenuClick() {
+            console.log("메뉴 버튼이 클릭되었습니다!");
+            // 여기에 메뉴를 여는 동작을 추가할 수 있습니다.
+        }
+
+        // 페이지가 로드되면 지도 초기화
+        window.onload = initMap;
+    </script>
+</body>
+</html>
