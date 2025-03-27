@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>안심 귀가 로봇</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=1.1">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #1c1c1c, #2f2f2f); /* 그라디언트 배경: 어두운 색상 */
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* 사이드바 스타일 */
+        .sidebar {
+            width: 250px;
+            background-color: #0f0f0f; /* 진한 검정 */
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 4px 0 25px rgba(0, 0, 0, 0.8); /* 사이드바 그림자 추가 */
+            transition: width 0.3s ease;
+        }
+
+        .sidebar a, .sidebar button {
+            background-color: transparent;
+            color: #f0f0f0;
+            border: none;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 18px;
+            cursor: pointer;
+            text-align: left;
+            width: 100%;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background-color 0.3s ease, padding-left 0.3s ease;
+        }
+
+        .sidebar a:hover, .sidebar button:hover {
+            background-color: #575757; /* 호버 시 어두운 회색 배경 */
+            padding-left: 25px; /* 호버 시 좌측 여백 증가 */
+            transform: translateX(5px); /* 약간의 이동 효과 */
+        }
+
+        /* 페이지 컨텐츠 */
+        .content {
+            margin-left: 250px;
+            padding: 30px;
+            background-color: rgba(0, 0, 0, 0.85); /* 어두운 배경 */
+            flex-grow: 1;
+            border-radius: 15px;
+            box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.6); /* 강렬한 그림자 효과 */
+            transition: margin-left 0.3s ease;
+        }
+
+        /* 헤더 */
+        .header {
+            background-color: rgba(0, 0, 0, 0.85); /* 헤더도 어두운 색상 */
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7); /* 헤더 그림자 */
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            font-weight: 600; /* 글자 두께 증가 */
+        }
+
+        /* 페이지 내용 */
+        .content p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #ccc; /* 연한 회색 글씨 */
+            margin-top: 20px;
+        }
+
+        /* 버튼 스타일 */
+        .button {
+            background-color: #ff5c5c;
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .button:hover {
+            background-color: #e63946; /* 붉은색으로 호버 */
+            transform: scale(1.1); /* 호버 시 크기 증가 */
+        }
+
+        /* 모바일 대응 */
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+                padding: 15px;
+            }
+
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .sidebar a, .sidebar button {
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 사이드바 -->
+    <div class="sidebar">
+        <a href="{{ url_for('robot_location') }}">로봇 위치 확인</a>
+
+        <!-- 영상 스트리밍 버튼 -->
+        <button id="streamButton" onclick="window.location.href='/stream'">영상 스트리밍</button>
+
+        <!-- 신고 버튼 -->
+        <button id="reportButton" onclick="window.location.href='/report_issue'">문제 신고</button>
+
+        <!-- 로봇 비활성화 버튼 -->
+       
+
+        <!-- 로그아웃 버튼 -->
+        <button id="logoutButton" onclick="window.location.href='{{ url_for('logout') }}'">로그아웃</button>
+    </div>
+
+    <!-- 페이지 컨텐츠 -->
+    <div class="content">
+        <!-- 상단 헤더 -->
+        <div class="header">
+            <h1>안심 귀가 로봇</h1>
+        </div>
+
+        <!-- 여기에 페이지 내용이 들어갑니다 -->
+        <p>안심로봇에 관련된 사진, 설명 등 첨부 예정</p>
+
+        
+    </div>
+
+</body>
+</html>

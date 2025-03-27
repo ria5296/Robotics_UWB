@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR 코드 인식</title>
+    <style>
+        .container {
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        #video {
+            width: 100%;
+            height: 300px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        #qr-result {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        /* 추가적으로 버튼 스타일링 */
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>QR 코드 인식</h1>
+        <p>QR 코드를 스캔하여 로봇을 활성화하세요.</p>
+
+        <!-- 카메라 화면을 표시할 div -->
+        <video id="video" autoplay></video>
+
+        <!-- QR 코드 인식 결과를 표시할 영역 -->
+        <p id="qr-result">QR 코드 결과가 여기에 표시됩니다.</p>
+
+        <!-- 카메라 시작 및 전환 버튼 -->
+        <button id="startButton">카메라 시작</button>
+        <button id="switchButton">전면/후면 카메라 전환</button>
+        <button id="stopButton">카메라 정지</button>
+
+        <!-- "사용 시작" 버튼 -->
+        <button id="useButton">사용 시작</button>
+
+        <p id="errorMsg" style="color: red;"></p>
+    </div>
+
+        <!-- 영상 스트리밍 버튼 -->
+        <button id="useButton" onclick="window.location.href='/streaming_and_report'">영상 스트리밍</button>
+
+    <!-- QR 코드 인식 라이브러리 추가 -->
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('video');
+            const startButton = document.getElementById('startButton');
+            const stopButton = document.getElementById('stopButton');
+            const switchButton = document.getElementById('switchButton');
+            const errorMsg = document.getElementById('errorMsg');
+            const qrResult = document.getElementById('qr-result');
+            const useButton = document.getElementById('useButton'); // 사용 시작 버튼
+
+            let currentStream = null;
+            let facingMode = 'environment'; // 'environment'는 후면, 'user'는 전면
+
+            // 카메라 시작 함수
+            async function startCamera() {
+                try {
+                    if (currentStream) {
+                        stopCamera();
+                    }
+
+                    const constraints = {
+                        video: {
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 },
+                            facingMode: facingMode
+                        },
+                        audio: false
+                    };
+
+                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    video.srcObject = stream;
+                    currentStream = stream;
+                    errorMsg.textContent = '';
+                } catch (err) {
+                    console.error('카메라 에러:', err);
+                    errorMsg.textContent = '카메라를 시작할 수 없습니다. ' + err.message;
+                }
+            }
+
+            // 카메라 정지 함수
+            function stopCamera() {
+                if (currentStream) {
+                    currentStream.getTracks().forEach(track => track.stop());
+                    video.srcObject = null;
+                    currentStream = null;
+                }
+            }
+
+            // 카메라 전환 함수
+            function switchCamera() {
+                facingMode = facingMode === 'environment' ? 'user' : 'environment';
+                startCamera();
+            }
+
+            // QR 코드 인식 기능 추가
+            function onScanSuccess(decodedText, decodedResult) {
+                // QR 코드가 성공적으로 인식되었을 때 호출됩니다.
+                qrResult.innerText = `QR 코드 인식 성공: ${decodedText}`;
+            }
+
+            function onScanError(errorMessage) {
+                // 오류 발생 시 호출됩니다.
+                console.warn(`QR 코드 인식 오류: ${errorMessage}`);
+            }
+
+            // QR 코드 인식 라이브러리로 카메라 스트림에서 QR 코드 인식 시작
+            const html5QrCode = new Html5Qrcode("video");
+            html5QrCode.start(
+                { facingMode: "environment" }, // 환경 카메라 사용
+                {
+                    fps: 10, // 초당 프레임 수
+                    qrbox: 250, // QR 코드 인식 영역
+                },
+                onScanSuccess,
+                onScanError
+            ).catch(err => {
+                console.error('QR 코드 인식 에러:', err);
+            });
+
+            // 이벤트 리스너 등록
+            startButton.addEventListener('click', startCamera);
+            stopButton.addEventListener('click', stopCamera);
+            switchButton.addEventListener('click', switchCamera);
+
+            // "사용 시작" 버튼 클릭 시 실시간 스트리밍과 경찰 신고 페이지로 이동
+            useButton.addEventListener('click', function() {
+                console.log('사용 시작 버튼 클릭됨');  // 디버깅 로그 추가
+                window.location.href = '/streaming_and_report'; // 페이지 이동
+            });
+
+            // 페이지 로드 시 자동으로 카메라 시작
+            startCamera();
+
+            // 페이지 종료 시 카메라 정지
+            window.addEventListener('beforeunload', stopCamera);
+        });
+    </script>
+</body>
+</html>

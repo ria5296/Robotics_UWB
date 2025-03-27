@@ -1,0 +1,152 @@
+/* 기본 스타일 */
+body {
+    font-family: 'Helvetica Neue', sans-serif; /* 고급스러운 세련된 서체 */
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(240, 240, 240, 0.9)); /* 부드러운 그라데이션 배경 */
+    color: #333;
+    box-sizing: border-box;
+}
+
+/* 헤더 */
+header {
+    background-color: rgba(0, 0, 0, 0.7); /* 반투명 배경 */
+    color: #fff;
+    padding: 40px 0;
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* 그림자 효과 */
+}
+
+/* 네비게이션 바 */
+.header-nav-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* 로봇 서비스 관리 박스 */
+.robot-service-box {
+    margin: 50px auto;
+    max-width: 800px;
+    padding: 50px;
+    background: rgba(255, 255, 255, 0.9); /* 반투명한 화이트 배경 */
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(8, 8, 8, 0.566)
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.robot-service-box:hover {
+    transform: scale(1.05); /* 박스 확대 효과 */
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.15); /* 호버 시 그림자 강도 증가 */
+}
+
+/* 버튼 박스 */
+.nav-buttons {
+    margin-bottom: 40px;
+}
+
+.nav-buttons a {
+    color: #fff;
+    background-color: #f2f2f96f; /* 세련된 보라색 */
+    text-decoration: none;
+    padding: 18px 36px;
+    font-size: 20px;
+    border-radius: 30px; /* 둥근 버튼 */
+    margin: 0 15px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-buttons a:hover {
+    background-color: #f2f2f96f; /* 호버 시 색상 어두워짐 */
+    transform: translateY(-5px); /* 버튼이 살짝 떠오르는 효과 */
+}
+
+/* 기능 버튼 */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.action-buttons button {
+    background-color: #f2f2f96f; /* 세련된 보라색 */
+    color: white;
+    border: none;
+    padding: 18px 36px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    width: 220px;
+}
+
+.action-buttons button:hover {
+    background-color: #f2f2f96f;
+    transform: translateY(-5px); /* 버튼이 살짝 떠오르는 효과 */
+}
+
+/* 로봇 이미지 스타일 */
+.robot-image {
+    display: block;
+    margin: 50px auto;
+    max-width: 450px;
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.robot-image:hover {
+    transform: scale(1.1); /* 이미지 확대 효과 */
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 강도 증가 */
+}
+
+/* 푸터 */
+footer {
+    background-color: rgba(0, 0, 0, 0.7); /* 반투명한 배경 */
+    color: #fff;
+    text-align: center;
+    padding: 15px;
+    font-size: 14px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+/* 사이드바 스타일 */
+.sidebar {
+    width: 240px;
+    background-color: rgba(0, 0, 0, 0.85); /* 다크한 반투명 배경 */
+    color: white;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100vh;
+    box-sizing: border-box;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2); /* 오른쪽 그림자 */
+}
+
+.sidebar a {
+    color: white;
+    margin: 12px 0;
+    text-decoration: none;
+    padding: 12px 20px;
+    background-color: #f2f2f96f; /* 세련된 보라색 */
+    border-radius: 15px;
+    width: 100%;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: #f2f2f96f;
+    transform: translateX(5px); /* 호버 시 사이드바 항목이 살짝 밀리는 효과 */
+}

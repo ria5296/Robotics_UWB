@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고장 신고</title>
+    <style>
+        .container {
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>고장 신고</h1>
+        <form method="POST" action="">
+            <textarea name="issue_description" rows="4" placeholder="고장 내용을 입력하세요"></textarea><br>
+            <input type="submit" value="신고하기">
+        </form>
+    </div>
+</body>
+</html>
+

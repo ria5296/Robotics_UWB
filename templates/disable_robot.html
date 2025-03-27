@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로봇 비활성화</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=1.1">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        button {
+            background-color: #d9534f;
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>로봇 비활성화</h1>
+    <p>현재 로봇 상태: {{ '비활성화됨' if not robot_active else '활성화됨' }}</p>
+    
+    <!-- 로봇 비활성화 버튼 -->
+    <form method="POST">
+        <button type="submit" {% if not robot_active %} disabled {% endif %}>로봇 비활성화</button>
+    </form>
+    
+    {% if not robot_active %}
+        <p>로봇은 이미 비활성화되었습니다.</p>
+    {% endif %}
+    
+</div>
+
+</body>
+</html>

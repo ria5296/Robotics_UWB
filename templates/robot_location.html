@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로봇 위치 지도</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 20px 0;
+            font-size: 32px;
+            color: #333;
+        }
+
+        #map {
+            width: 80%;
+            height: 500px; /* 지도 크기 줄임 */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .qr-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .qr-button:hover {
+            background-color: #218838;
+        }
+
+        .update-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .update-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>로봇 위치 지도</h1>
+
+    <!-- 버튼을 지도의 상단에 배치 -->
+    <div class="button-container">
+        <!-- QR 코드 인식 버튼 -->
+        <a href="{{ url_for('qr_code') }}">
+            <button class="qr-button">QR 코드 인식</button>
+        </a>
+    </div>
+
+    <!-- 지도 표시 -->
+    <div id="map"></div>
+    
+    <!-- 위치 업데이트 버튼 -->
+    <div class="button-container">
+        <button id="updateLocationButton" class="update-button">위치 업데이트</button>
+    </div>
+
+    <script>
+        // 지도 초기화 (대구광역시 경북대학교로 초기화)
+        var map = L.map('map').setView([35.8886, 128.6110], 15);
+
+        // 타일 레이어 추가 (OpenStreetMap 사용)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // 초기 로봇 위치
+        var robotLocation = {
+            "lat": 35.8886,
+            "lng": 128.611
+        };
+
+        // 로봇 위치 마커 추가
+        var robotMarker = L.marker([robotLocation.lat, robotLocation.lng]).addTo(map)
+            .bindPopup("로봇 위치")
+            .openPopup();
+
+        // 버튼 클릭 시 로봇 위치 업데이트
+        document.getElementById('updateLocationButton').addEventListener('click', function() {
+            // 새로운 로봇 위치 (예시: 경기도 성남시로 이동)
+            var newLocation = {
+                "lat": 37.4282,
+                "lng": 127.1383
+            };
+
+            // 마커 위치 업데이트
+            robotMarker.setLatLng([newLocation.lat, newLocation.lng]);
+            robotMarker.setPopupContent("새로운 로봇 위치");
+            map.setView([newLocation.lat, newLocation.lng], 15); // 지도 이동
+        });
+    </script>
+
+</body>
+</html>
